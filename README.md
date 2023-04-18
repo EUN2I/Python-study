@@ -45,7 +45,7 @@ result.rename(columns={'index': 'lecture', 'score': 'avg_score', 're': 'sum_re'}
 &emsp;&emsp;&emsp;&emsp; * sum, mean, median, min, max, count, nunique(중복 제외 고유값 개수) 등 \
 &emsp;&emsp;&emsp;&emsp; * lambda 함수 사용 가능 ex) **lambda x: ','.join(x)**  \
 &emsp;&emsp; - margins : 총합계 표시 여부, false로 설정하면 총합계 표시 없음 \
-&emsp;&emsp; - dropna :  결측값을 계산에 포함할지 여부. false로 설정하면 결측값도 포함 \
+&emsp;&emsp; - dropna :  결측값을 계산에 포함할지 여부. false로 설정하면 결측값도 포함
 
 * 문자열 합치는 lambda 함수 \
 &emsp;&emsp; * 중복값 제거 없이 : lambda x: ','.join(x) \
