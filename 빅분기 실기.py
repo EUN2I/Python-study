@@ -1,11 +1,6 @@
 
 ### 빅데이터분석기사 실기 공부(23년 개정 ver)
 import pandas as pd
-2+3
-
-
-pip install pandas
-pip install numpy
 
 # 1과목
 import numpy as np
