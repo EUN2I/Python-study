@@ -42,8 +42,14 @@ Q3 = titanic['age'].quantile(0.75)
 IQR = Q3-Q1
 outlier1, outlier2 = Q1-1.5*IQR, Q3+1.5*IQR
 
-# 정렬 : df.sort_values(ascending="")
-#
+# (2) 정렬 : df.sort_values(ascending="")
+# (3) df에서 np 사용하기
+
+titanic[titanic['fare']-np.floor(titanic['fare']) != 0 ]
+
+np.round(5.5), np.ceil(5.5) , np.floor(5.5), np.trunc(5.5)
+np.round(-5.5), np.ceil(-5.5) , np.floor(-5.5), np.trunc(-5.5)
+
 
 ### 2과목
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
