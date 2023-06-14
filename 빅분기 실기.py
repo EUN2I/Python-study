@@ -30,25 +30,56 @@ help(stats.ttest_ind)
 # - 주요 패키지 : pandas, numpy
 
 import seaborn as sns
-titanic = sns.load_dataset('titanic')
-titanic.head()
+df = sns.load_dataset('titanic')
+df.head()
 
 # (1) IQR & 이상치
 
 "quantile" in list(dir(pd.DataFrame))
 
-Q1 = titanic['age'].quantile(0.25)
-Q3 = titanic['age'].quantile(0.75)
+Q1 = df['age'].quantile(0.25)
+Q3 = df['age'].quantile(0.75)
 IQR = Q3-Q1
 outlier1, outlier2 = Q1-1.5*IQR, Q3+1.5*IQR
 
-# (2) 정렬 : df.sort_values(ascending="")
-# (3) df에서 np 사용하기
+# (2) 정렬
+# df.sort_values(ascending="")
 
-titanic[titanic['fare']-np.floor(titanic['fare']) != 0 ]
+# (3) df에서 numpy(np) 사용하기
+
+df[df['fare']-np.floor(df['fare']) != 0 ] # 소숫점 자리 숫자 있는 데이터 찾기
 
 np.round(5.5), np.ceil(5.5) , np.floor(5.5), np.trunc(5.5)
 np.round(-5.5), np.ceil(-5.5) , np.floor(-5.5), np.trunc(-5.5)
+
+# 결측값 개수 확인
+df.isnull().sum()
+
+# 결측값 채우는 코드가 복잡할 경우 inplace 작동 안함
+df = sns.load_dataset('titanic')
+for sex in df.sex.unique():
+    df.loc[df.sex == sex, 'age'].fillna(df.loc[df.sex == sex, 'age'].mean(), inplace=True)
+
+print("inplace 써서 결측값 채웠을 때 결측값 개수 : ", df.age.isnull().sum())
+
+df = sns.load_dataset('titanic')
+for sex in df.sex.unique():
+    df.loc[df.sex == sex, 'age'] = df.loc[df.sex== sex, 'age'].fillna(df.loc[df.sex == sex, 'age'].mean())
+
+print("inplace 안쓰고 변수에 직접 지정 했을 때  결측값 채웠을 때 결측값 개수 : ", df.age.isnull().sum())
+
+# 결측값 채울 때 map 사용하기 ( 다른 칼럼의 값으로 그룹화 해서 결측값 채우기
+
+df = sns.load_dataset('titanic')
+df['age'] = df['age'].fillna(df['sex'].map({'male' : 30,'female' : 25}))
+
+my_dict = {city : y for city, y in zip(df['city'], df['y'])}
+
+# 왜도, 첨도, 로그변환
+
+왜도 = df.fare.skew() # 분포의 기울어진 정도. 왜도가 양수이면 오른쪽꼬리가 길다
+첨도 = df.fare.kurt() # 꼬리의 두께. 3보다 크면 정규분포보다 꼬리가 두꺼움
+df['log_fare'] = np.log1p(df.fare) # 로그변환
 
 
 ### 2과목
