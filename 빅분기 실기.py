@@ -47,7 +47,15 @@ outlier1, outlier2 = Q1-1.5*IQR, Q3+1.5*IQR
 
 # (3) df에서 numpy(np) 사용하기
 
-df[df['fare']-np.floor(df['fare']) != 0 ] # 소숫점 자리 숫자 있는 데이터 찾기
+# 소숫점 자리 숫자 있는 데이터 찾기
+# 1번 방법
+df[df['fare']-np.floor(df['fare']) != 0 ]
+
+# 2번 방법
+df[df.fare%1==0]
+
+# 3번 방법
+df[df.fare == round(df.age,0)]
 
 np.round(5.5), np.ceil(5.5) , np.floor(5.5), np.trunc(5.5)
 np.round(-5.5), np.ceil(-5.5) , np.floor(-5.5), np.trunc(-5.5)
@@ -170,9 +178,42 @@ df.head(10), df.tail(10)
 # df['day'] = df['Date'].dt.day
 # df['dayofweek'] = df['Date'].dt.dayofweek
 
-
 # df 의 lambda 함수 사용법 -> 칼럼에 대한 조건 설정시 axis=1 꼭 넣어야함
 # df['Sales_new'] =  df.apply(lambda x: x['Sales'] * 0.8 if x['Events'] == 1 else x['Sales'], axis=1)
+
+# df = pd.read_csv("file.csv", parse_dates=['Date'], index_col=0)
+# 아래 코드를 한줄로 표현함
+# df = pd.read_csv("file.csv")
+# df['Date'] = pd.to_datetime(df['Date'])
+# df = df.set_index('Date')
+
+# 주단위, 2주단위, 월단위로 묶는 방법
+df_2 = df.set_index('Date').resample('W').sum() # 1주 : W, 2주 : 2W, 1달 : M
+
+#1일 차이가 나는 시차 특성 만들기
+df['previous_PV'] = df['PV'].shift(1)
+
+# n번째 글자 확인법 : .str[:1]
+
+# 특정 칼럼을 기준으로 값마다의 갯수를 알고 싶을때? : df.칼럼명.value_counts()
+
+# 칼럼의 데이터 타입 변경하기 : df = df.astype({'칼럼명' : 'int'})
+'''
+Numeric Types: int(정수), float(소수), complex(복소수)
+Sequence Types: str(문자열), list(리스트), tuple(튜플)
+Mapping Type: dict(딕셔너리)
+Set Types: set(집합)
+Boolean Type: bool(불리언)
+Binary Types: bytes, bytearray, memoryview
+'''
+
+# 20221201 형태 데이터를 날짜 형식으로 바꾸는 방법
+df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
+
+# melt 이해하기 -> 풀어쓰기
+
+df=pd.DataFrame({'name' : ['A','B','C'], 'Math' : [10,20,30], 'Eng' : [50,60,70]})
+pd.melt(df, ["name"])
 
 ### 2과목
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
