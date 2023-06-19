@@ -81,6 +81,16 @@ my_dict = {city : y for city, y in zip(df['city'], df['y'])}
 첨도 = df.fare.kurt() # 꼬리의 두께. 3보다 크면 정규분포보다 꼬리가 두꺼움
 df['log_fare'] = np.log1p(df.fare) # 로그변환
 
+# 특정칼럼의 결측치 제거
+
+df2 = df[~df.fare.isnull()]
+
+# 값 대체하기, replace
+df3 = df.copy()
+df3['sex'] = df['sex'].replace({'female':'f','male':'m'})
+df3['sex']
+
+
 
 ### 2과목
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
