@@ -270,6 +270,12 @@ from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 df[cat_cols] = df[cat_cols].apply(le.fit_transform)
 
+# 더미
+x = pd.get_dummies(x,columns= cat_cols)
+
+# 로그변환( np.log1p(df.col) ) <> 지수화( np.exp(df.col) )
+
+
 # 스케일링
 
 from sklearn.preprocessing import StandardScaler
@@ -280,6 +286,17 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
 X_test[numeric_features] = scaler.transform(X_test[numeric_features])
+
+### 숫자형 칼럼만 뽑아내는 방법
+df_num = df.select_dtypes(exclued=['object'])
+df_num = df.select_dtypes(inclued=['int64'])
+
+### 결측치 채우기 쉽고 빠르게
+
+from sklearn.impute import SimpleImputer
+imp = SimpleImputer()
+df = imp.fit_transform(df)
+
 
 # 분류 모델링
 
