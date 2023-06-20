@@ -220,6 +220,7 @@ pd.melt(df, id_vars=["name"], value_vars=['Math'])
 def sigmoid(x):
     return 1/(1+np.exp(-x))
 
+# 행을 지정해서 삭제하기 : .drop(index=del_idx, axis=0)
 
 ### 2과목
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
@@ -227,15 +228,21 @@ def sigmoid(x):
 
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 
-'''1. 결측치 및 이상치 처리, 파생변수 생성
 
-2. 랜덤오버샘플링
+'''
+1. 결측치 및 이상치 처리, 파생변수 생성 및 스케일링
 
-3. 분포변환(Standard Scaling)
+- 전처리는 train data와 test data를 합쳐서 진행한다
+- 처음 데이터셋이 분리된 상태인 경우 df_all = pd.concat([x_train.assign(ind='train'), x_test.assign(ind='test')]
+- df.info() 확인후 num_cols = [age, height], cat_cols = [sex,city] 로 분리한다.
+- 분리한 뒤 df.describe(), df.isnull.sum() 을 하여 결측치 처리를 한다
+  num_col 은 평균 / cat_cols는 최빈값 또는 별도의 값 / 또는 행 삭제
+- 스케일링(minmaxscaler, standardscaler) : num_col
+- 라벨인코딩(LabelEncoder) : cat_col
+* 라벨링과 스케일링은 fit, transform vs 모델링은 fit, predict
 
-4. 학습-검증 데이터 분할(8:2)
+2. 학습-검증 데이터 분할(8:2)
 
 5. 모델링(RandomForest, 별도 하이퍼파라미터 설정하지 않음)
 
@@ -245,17 +252,79 @@ from sklearn.model_selection import train_test_split
 # 1. 데이터 불러오기 및 결측치 및 이상치 처리, 파생변수 생성
 # 2.
 #
-# 를 분리하기
-
+# 데이터 분리하기
+from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.3, random_state=777)
 X_train, X_test = train_test_split(df, test_size=0.2, random_state=2021)
 
+# train, val, test 3그룹으로 분리하기
+from sklearn.cross_validation import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=1)
+
+# 라벨인코딩
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df[cat_cols] = df[cat_cols].apply(le.fit_transform)
+
+# 스케일링
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+df[num_cols] = scaler.fit_transform(df[num_cols])
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
+X_test[numeric_features] = scaler.transform(X_test[numeric_features])
+
+# 분류 모델링
+
+#SVC
+from sklearn.svm import SVC
+model = SVC(random_state=2022)
+model.fit(x_train, y_train['Outcome'])
+
+#RandomForest
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(random_state = 2022)
+model.fit(X_tr, y_tr)
+pred = model.predict(X_val)
+print('accuracy score:', (accuracy_score(y_val, pred)))
+
+# 회귀 모델링
+from sklearn.ensemble import RandomForestRegressor
+model = RandomForestRegressor()
+model.fit(X_tr, y_tr)
+pred = model.predict(X_val)
+
+from xgboost import XGBRegresso
+model = XGBRegressor()
+model.fit(X_tr, y_tr, verbose=False)
+pred = model.predict(X_val)
 
 
+#rmse : 낮을수록 좋음 / r2 높을수록 좋음
 
+from sklearn.metrics import mean_squared_error, r2_score, accuracy_score
+def rmse(y, y_pred):
+    return np.sqrt(mean_squared_error(y, y_pred))
 
+r2_score(y_val, pred), rmse(y_val, pred)
 
+# 지표 확인
+model.score(x_train, y_train['Outcome'])
 
+from sklearn.metrics import accuracy_score
+
+# 예측 결과값 데이터프레임으로 뽑아내기
+predictions = model.predict(x_test)
+
+output = pd.DataFrame({'idx' : x_test.index, 'Outcome' : predictions})
 
 
 
