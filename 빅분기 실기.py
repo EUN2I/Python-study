@@ -211,9 +211,15 @@ Binary Types: bytes, bytearray, memoryview
 df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
 
 # melt 이해하기 -> 풀어쓰기
-
+import pandas as pd
 df=pd.DataFrame({'name' : ['A','B','C'], 'Math' : [10,20,30], 'Eng' : [50,60,70]})
-pd.melt(df, ["name"])
+pd.melt(df, id_vars=["name"], value_vars=['Math'])
+
+# sigmoid 함수
+
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+
 
 ### 2과목
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
