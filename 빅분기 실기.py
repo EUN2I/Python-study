@@ -219,6 +219,47 @@ pd.melt(df, ["name"])
 # - 머신러닝 작업 능력 (전처리,모형 구축,평가)
 # - 주요 패키지 : pandas, sklearn
 
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+'''1. 결측치 및 이상치 처리, 파생변수 생성
+
+2. 랜덤오버샘플링
+
+3. 분포변환(Standard Scaling)
+
+4. 학습-검증 데이터 분할(8:2)
+
+5. 모델링(RandomForest, 별도 하이퍼파라미터 설정하지 않음)
+
+6. 성능평가
+
+7. 예측값 생성 및 파일저장'''
+# 1. 데이터 불러오기 및 결측치 및 이상치 처리, 파생변수 생성
+# 2.
+#
+# 를 분리하기
+
+x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.3, random_state=777)
+X_train, X_test = train_test_split(df, test_size=0.2, random_state=2021)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 3과목
 # - 통계 작업 능력 (가설검정, 분산분석, t-test 등)
 # - 주요 패키지 : scipy.stats
